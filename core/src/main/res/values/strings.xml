@@ -1,0 +1,19 @@
+<resources>
+    <!-- Dummy Text -->
+    <string name="txt_dummy_name">Alva Yonara Puramandya</string>
+    <string name="txt_dummy_username">alvayonara</string>
+    <string name="txt_dummy_bio">Director of Netshare Company</string>
+    <string name="txt_dummy_followers">12K Followers</string>
+    <string name="txt_dummy_following">120 Following</string>
+    <string name="txt_dummy_location">Jakarta, Indonesia</string>
+    <string name="txt_dummy_repository">android-trinity</string>
+    <string name="txt_dummy_star">55</string>
+    <string name="txt_dummy_updated_at">Updated 15 hours ago</string>
+
+    <!-- Text -->
+    <string name="txt_retry_snackbar">RETRY</string>
+    <string name="txt_username">\@%s</string>
+    <string name="txt_followers">%s Followers</string>
+    <string name="txt_following">%s Following</string>
+    <string name="txt_updated_at">Updated %s</string>
+</resources>

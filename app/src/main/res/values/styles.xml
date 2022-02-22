@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Progress Bar -->
+    <style name="ProgressBar">
+        <item name="android:indeterminate">true</item>
+        <item name="android:indeterminateTintMode">src_atop</item>
+        <item name="android:indeterminateTint">@color/mine_shaft</item>
+    </style>
+
+    <style name="ProgressBar.45">
+        <item name="android:layout_width">@dimen/spacing_45dp</item>
+        <item name="android:layout_height">@dimen/spacing_45dp</item>
+    </style>
+</resources>

@@ -1,0 +1,108 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/cl_search_user"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@color/white"
+    android:paddingTop="@dimen/spacing_16dp">
+
+    <de.hdodenhof.circleimageview.CircleImageView
+        android:id="@+id/iv_image"
+        android:layout_width="@dimen/spacing_32dp"
+        android:layout_height="@dimen/spacing_32dp"
+        android:layout_marginStart="@dimen/spacing_24dp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        tools:src="@color/black" />
+
+    <TextView
+        android:id="@+id/tv_name"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="@dimen/spacing_8dp"
+        android:fontFamily="@font/roboto_bold"
+        android:maxLines="1"
+        android:textColor="@color/mine_shaft"
+        android:textSize="@dimen/text_size_16sp"
+        app:layout_constraintStart_toEndOf="@id/iv_image"
+        app:layout_constraintTop_toTopOf="@+id/iv_image"
+        tools:text="@string/txt_dummy_name" />
+
+    <TextView
+        android:id="@+id/tv_username"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="@dimen/spacing_8dp"
+        android:layout_marginEnd="@dimen/spacing_24dp"
+        android:fontFamily="@font/roboto_regular"
+        android:maxLines="1"
+        android:textColor="@color/mine_shaft"
+        android:textSize="@dimen/text_size_10sp"
+        app:layout_constraintBottom_toBottomOf="@id/tv_name"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@id/tv_name"
+        app:layout_constraintTop_toTopOf="@+id/tv_name"
+        tools:text="@string/txt_dummy_username" />
+
+    <TextView
+        android:id="@+id/tv_bio"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="@dimen/spacing_8dp"
+        android:layout_marginTop="@dimen/spacing_4dp"
+        android:layout_marginEnd="@dimen/spacing_24dp"
+        android:ellipsize="end"
+        android:fontFamily="@font/roboto_regular"
+        android:lineHeight="@dimen/text_size_16sp"
+        android:maxLines="3"
+        android:textColor="@color/mine_shaft"
+        android:textSize="@dimen/text_size_14sp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/iv_image"
+        app:layout_constraintTop_toBottomOf="@+id/tv_name"
+        tools:targetApi="p"
+        tools:text="@string/txt_dummy_bio" />
+
+    <TextView
+        android:id="@+id/tv_location"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="@dimen/spacing_8dp"
+        android:layout_marginTop="@dimen/spacing_12dp"
+        android:ellipsize="end"
+        android:fontFamily="@font/roboto_regular"
+        android:maxLines="1"
+        android:textColor="@color/dove_gray"
+        android:textSize="@dimen/text_size_10sp"
+        app:layout_constraintStart_toEndOf="@+id/iv_image"
+        app:layout_constraintTop_toBottomOf="@+id/tv_bio"
+        tools:text="Jakarta, Indonesia" />
+
+    <TextView
+        android:id="@+id/tv_email"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="@dimen/spacing_16dp"
+        android:layout_marginEnd="@dimen/spacing_24dp"
+        android:ellipsize="end"
+        android:fontFamily="@font/roboto_regular"
+        android:maxLines="1"
+        android:textColor="@color/dove_gray"
+        android:textSize="@dimen/text_size_10sp"
+        app:layout_constraintBottom_toBottomOf="@id/tv_location"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/tv_location"
+        app:layout_constraintTop_toTopOf="@+id/tv_location"
+        tools:text="Jakarta, Indonesia" />
+
+    <View
+        android:id="@+id/line_content"
+        style="@style/Divider.WildSand"
+        android:layout_marginHorizontal="@dimen/spacing_27dp"
+        android:layout_marginTop="@dimen/spacing_16dp"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/tv_email" />
+</androidx.constraintlayout.widget.ConstraintLayout>
