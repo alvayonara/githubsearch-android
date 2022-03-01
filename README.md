@@ -1,5 +1,5 @@
 # GitHubSearch
- :octocat: A GitHub Search Android apps using Coroutines Flow, Dagger 2, MVVM, Modularization, Clean Architecture, Airbnb Epoxy, and Unit Test.
+ :octocat: 🧐 A GitHub Search Android apps using Coroutines Flow, Dagger 2, MVVM, Modularization, Clean Architecture, Airbnb Epoxy, and Unit Test.
 There are 2 features on this apps:
 1. Search GitHub users by name.
 2. Get detail information of the user including Profile and Repository with load more features.
