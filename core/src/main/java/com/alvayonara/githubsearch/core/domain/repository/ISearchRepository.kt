@@ -1,7 +1,8 @@
 package com.alvayonara.githubsearch.core.domain.repository
 
 import com.alvayonara.githubsearch.core.domain.model.search.SearchItem
+import io.reactivex.rxjava3.core.Flowable
 
 interface ISearchRepository {
-    suspend fun searchUser(query: String, page: Int): List<SearchItem>
+    fun searchUser(query: String, page: Int): Flowable<List<SearchItem>>
 }

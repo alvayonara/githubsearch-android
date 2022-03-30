@@ -4,6 +4,7 @@ import com.alvayonara.githubsearch.core.data.source.remote.response.SearchRemote
 import com.alvayonara.githubsearch.core.domain.model.search.SearchItem
 import com.alvayonara.githubsearch.core.domain.repository.ISearchRepository
 import com.alvayonara.githubsearch.core.utils.SearchMapper.mapSearchResponsesToEntities
+import io.reactivex.rxjava3.core.Flowable
 import javax.inject.Inject
 import javax.inject.Singleton
 
@@ -12,6 +13,8 @@ class SearchRepository @Inject constructor(
     private val searchRemoteSource: SearchRemoteSource
 ) : ISearchRepository {
 
-    override suspend fun searchUser(query: String, page: Int): List<SearchItem> =
-        searchRemoteSource.searchUser(query, page).mapSearchResponsesToEntities().items
+    override fun searchUser(query: String, page: Int): Flowable<List<SearchItem>> =
+        searchRemoteSource.searchUser(query, page).map {
+            it.mapSearchResponsesToEntities().items
+        }
 }

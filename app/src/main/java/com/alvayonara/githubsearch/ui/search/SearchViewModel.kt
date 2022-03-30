@@ -3,13 +3,13 @@ package com.alvayonara.githubsearch.ui.search
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.asLiveData
-import androidx.lifecycle.viewModelScope
-import com.alvayonara.githubsearch.core.data.source.remote.Resource
 import com.alvayonara.githubsearch.core.domain.model.profile.Profile
 import com.alvayonara.githubsearch.core.domain.usecase.profile.ProfileUseCase
-import com.alvayonara.githubsearch.core.domain.usecase.search.SearchUseCase
-import com.alvayonara.githubsearch.core.utils.Constant
-import kotlinx.coroutines.*
+import io.reactivex.rxjava3.disposables.CompositeDisposable
+import io.reactivex.rxjava3.schedulers.Schedulers
+import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.FlowPreview
+import kotlinx.coroutines.ObsoleteCoroutinesApi
 import kotlinx.coroutines.channels.BroadcastChannel
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.*
@@ -19,18 +19,13 @@ import javax.inject.Inject
 @ObsoleteCoroutinesApi
 @ExperimentalCoroutinesApi
 class SearchViewModel @Inject constructor(
-    private val searchUseCase: SearchUseCase,
     private val profileUseCase: ProfileUseCase
 ) : ViewModel() {
 
-    private val _loading: MutableLiveData<Boolean> = MutableLiveData(false)
-    val loading: MutableLiveData<Boolean> get() = _loading
+    private val _compositeDisposable by lazy { CompositeDisposable() }
 
-    private val _search: MutableLiveData<Resource<List<Profile>>> = MutableLiveData()
-    val search: MutableLiveData<Resource<List<Profile>>> get() = _search
-
-    private val _searchNext: MutableLiveData<Resource<List<Profile>>> = MutableLiveData()
-    val searchNext: MutableLiveData<Resource<List<Profile>>> get() = _searchNext
+    private val _search: MutableLiveData<SearchUiState> = MutableLiveData()
+    val search: MutableLiveData<SearchUiState> get() = _search
 
     private val _mutableName: MutableLiveData<String> = MutableLiveData()
     val mutableName: MutableLiveData<String> get() = _mutableName
@@ -47,38 +42,31 @@ class SearchViewModel @Inject constructor(
         }
         .asLiveData()
 
-    fun search(name: String) {
-        viewModelScope.launch {
-            _loading.postValue(true)
-            try {
-                val result = searchUseCase.searchUser(name, Constant.Services.FIRST_PAGE)
-                    .flatMapConcat { it.asFlow() }
-                    .flatMapMerge { searchItem ->
-                        profileUseCase.getProfile(searchItem.login)
-                    }
-                    .flowOn(Dispatchers.Default)
-                    .toList(mutableListOf())
-                _search.postValue(Resource.success(result))
-            } catch (throwable: Throwable) {
-                _search.postValue(Resource.error(throwable))
-            }
-        }
+    init {
+        search("Alva")
     }
 
-    fun searchNext(name: String, page: Int) {
-        viewModelScope.launch {
-            try {
-                val result = searchUseCase.searchUser(name, page)
-                    .flatMapConcat { it.asFlow() }
-                    .flatMapMerge { searchItem ->
-                        profileUseCase.getProfile(searchItem.login)
-                    }
-                    .flowOn(Dispatchers.Default)
-                    .toList(mutableListOf())
-                _searchNext.postValue(Resource.success(result))
-            } catch (throwable: Throwable) {
-                _searchNext.postValue(Resource.error(throwable))
-            }
-        }
+    fun search(name: String) {
+        _compositeDisposable.add(profileUseCase.getProfile(name)
+            .doOnSubscribe { _search.postValue(SearchUiState.ShowLoading) }
+            .subscribeOn(Schedulers.io())
+            .observeOn(Schedulers.computation())
+            .subscribe({
+                _search.postValue(SearchUiState.SearchResult(listOf(it)))
+            }, {
+                _search.postValue(SearchUiState.ShowError(it))
+            })
+        )
+    }
+
+    sealed class SearchUiState {
+        object ShowLoading : SearchUiState()
+        data class ShowError(val error: Throwable) : SearchUiState()
+        data class SearchResult(val model: List<Profile>) : SearchUiState()
+    }
+
+    override fun onCleared() {
+        super.onCleared()
+        _compositeDisposable.clear()
     }
 }

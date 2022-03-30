@@ -8,15 +8,10 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.alvayonara.githubsearch.GitHubApplication
 import com.alvayonara.githubsearch.R
 import com.alvayonara.githubsearch.core.base.BaseFragment
-import com.alvayonara.githubsearch.core.data.source.remote.Resource
-import com.alvayonara.githubsearch.core.domain.model.profile.Profile
-import com.alvayonara.githubsearch.core.domain.model.profile.Repository
 import com.alvayonara.githubsearch.core.ui.profile.ProfileController
 import com.alvayonara.githubsearch.core.utils.*
-import com.alvayonara.githubsearch.databinding.FragmentProfileBinding
-import com.alvayonara.githubsearch.di.ViewModelFactory
+import com.alvayonara.githubsearch.databinding.FragmentDetailBinding
 import com.alvayonara.githubsearch.di.detail.DetailViewModelFactory
-import com.alvayonara.githubsearch.di.search.SearchViewModelFactory
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.FlowPreview
 import kotlinx.coroutines.ObsoleteCoroutinesApi
@@ -25,23 +20,23 @@ import javax.inject.Inject
 @ObsoleteCoroutinesApi
 @FlowPreview
 @ExperimentalCoroutinesApi
-class ProfileFragment : BaseFragment<FragmentProfileBinding>() {
+class DetailFragment : BaseFragment<FragmentDetailBinding>() {
 
     @Inject
     lateinit var factory: DetailViewModelFactory
-    private val _profileViewModel: ProfileViewModel by viewModels { factory }
+    private val _detailViewModel: DetailViewModel by viewModels { factory }
 
     @Inject
     lateinit var profileController: ProfileController
 
-    private val args: ProfileFragmentArgs by navArgs()
+    private val args: DetailFragmentArgs by navArgs()
 
     private var _currentPage = Constant.Services.FIRST_PAGE
     private var _username = ""
     private var _isScrolled = false
 
-    override val bindingInflater: (LayoutInflater, ViewGroup?, Boolean) -> FragmentProfileBinding
-        get() = FragmentProfileBinding::inflate
+    override val bindingInflater: (LayoutInflater, ViewGroup?, Boolean) -> FragmentDetailBinding
+        get() = FragmentDetailBinding::inflate
 
     override fun setup() {
         setupView()
@@ -52,12 +47,12 @@ class ProfileFragment : BaseFragment<FragmentProfileBinding>() {
     override fun setupView() {
         args.username.let {
             _username = it
-            _profileViewModel.getProfile(it)
+            _detailViewModel.getProfile(it)
         }
 
         binding.lytError.clError.setOnClickListener {
             binding.lytError.root.gone()
-            _profileViewModel.getProfile(_username)
+            _detailViewModel.getProfile(_username)
         }
     }
 
@@ -70,7 +65,7 @@ class ProfileFragment : BaseFragment<FragmentProfileBinding>() {
                         _currentPage++
                     }
                     loadMoreState(true)
-                    _profileViewModel.getNextRepository(_username, _currentPage)
+                    _detailViewModel.getNextRepository(_username, _currentPage)
                 }
             })
             layoutManager = LinearLayoutManager(requireActivity())
@@ -79,34 +74,21 @@ class ProfileFragment : BaseFragment<FragmentProfileBinding>() {
     }
 
     override fun subscribeViewModel() {
-        _profileViewModel.apply {
-            loading.observe(viewLifecycleOwner) { showLoading(it) }
-
-            profile.observe(viewLifecycleOwner) { result ->
-                when (result.status) {
-                    Resource.Status.SUCCESS -> {
+        _detailViewModel.apply {
+            detail.observe(viewLifecycleOwner) { result ->
+                when (result) {
+                    is DetailViewModel.DetailUiState.ShowLoading -> showLoading(true)
+                    is DetailViewModel.DetailUiState.ProfileResult ->  profileController.setProfile(result.model)
+                    is DetailViewModel.DetailUiState.RepositoryResult -> profileController.setRepository(result.model.toMutableList())
+                    is DetailViewModel.DetailUiState.ShowContent -> showLoading(false)
+                    is DetailViewModel.DetailUiState.ShowError -> {
                         showLoading(false)
-                        result.body?.let {
-                            it.forEach { data ->
-                                when (data.first) {
-                                    Constant.DetailProfile.PROFILE -> profileController.setProfile(
-                                        data.second as Profile
-                                    )
-                                    Constant.DetailProfile.REPOSITORY -> profileController.setRepository(
-                                        (data.second as List<Repository>).toMutableList()
-                                    )
-                                }
-                            }
-                        }
-                    }
-                    Resource.Status.ERROR -> {
-                        showLoading(false)
-                        result.throwable?.let { throwable ->
-                            showError(throwable)
+                        result.let { throwable ->
+                            showError(throwable.error)
                             binding.sbProfile.showErrorSnackbar(
-                                text = getString(R.string.txt_error, throwable.getThrowable()),
+                                text = getString(R.string.txt_error, throwable.error.getThrowable()),
                                 onRetry = {
-                                    _profileViewModel.getProfile(_username)
+                                    _detailViewModel.getProfile(_username)
                                 }
                             )
                         }
@@ -115,21 +97,21 @@ class ProfileFragment : BaseFragment<FragmentProfileBinding>() {
             }
 
             repository.observe(viewLifecycleOwner) { result ->
-                when (result.status) {
-                    Resource.Status.SUCCESS -> {
+                when (result) {
+                    is DetailViewModel.RepositoryUiState.RepositoryResult -> {
                         _isScrolled = false
-                        result.body?.let {
+                        result.model.let {
                             if (it.isEmpty()) loadMoreState(false)
                             profileController.addRepository(it.toMutableList())
                         }
                     }
-                    Resource.Status.ERROR -> {
+                    is DetailViewModel.RepositoryUiState.ShowError -> {
                         loadMoreState(false)
-                        result.throwable?.let { throwable ->
+                        result.error.let { throwable ->
                             binding.sbProfile.showErrorSnackbar(
                                 text = getString(R.string.txt_error, throwable.getThrowable()),
                                 onRetry = {
-                                    _profileViewModel.getNextRepository(_username, _currentPage)
+                                    _detailViewModel.getNextRepository(_username, _currentPage)
                                 }
                             )
                         }
@@ -145,9 +127,11 @@ class ProfileFragment : BaseFragment<FragmentProfileBinding>() {
 
     private fun showLoading(isLoading: Boolean) {
         if (isLoading) {
+            binding.rvProfile.gone()
             binding.pbProfile.visible()
         } else {
             binding.pbProfile.gone()
+            binding.rvProfile.visible()
         }
     }
 

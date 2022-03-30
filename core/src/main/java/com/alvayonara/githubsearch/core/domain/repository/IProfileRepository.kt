@@ -2,8 +2,9 @@ package com.alvayonara.githubsearch.core.domain.repository
 
 import com.alvayonara.githubsearch.core.domain.model.profile.Profile
 import com.alvayonara.githubsearch.core.domain.model.profile.Repository
+import io.reactivex.rxjava3.core.Flowable
 
 interface IProfileRepository {
-    suspend fun getProfile(username: String): Profile
-    suspend fun getRepository(username: String, page: Int): List<Repository>
+    fun getProfile(username: String): Flowable<Profile>
+    fun getRepository(username: String, page: Int): Flowable<List<Repository>>
 }

@@ -86,12 +86,12 @@ class SearchFragment : BaseFragment<FragmentSearchBinding>() {
         binding.rvSearch.apply {
             addOnScrollListener(object : RecyclerViewLoadMore() {
                 override fun onLoadMore() {
-                    if (!_isScrolled) {
-                        _isScrolled = true
-                        _currentPage++
-                    }
-                    loadMoreState(true)
-                    _searchViewModel.searchNext(_username, _currentPage)
+//                    if (!_isScrolled) {
+//                        _isScrolled = true
+//                        _currentPage++
+//                    }
+//                    loadMoreState(true)
+//                    _searchViewModel.searchNext(_username, _currentPage)
                 }
             })
             layoutManager = LinearLayoutManager(requireActivity())
@@ -107,13 +107,12 @@ class SearchFragment : BaseFragment<FragmentSearchBinding>() {
                 _username = username
             }
 
-            loading.observe(viewLifecycleOwner) { showLoading(it) }
-
             search.observe(viewLifecycleOwner) { result ->
-                when (result.status) {
-                    Resource.Status.SUCCESS -> {
-                        showLoading(false)
-                        result.body?.let {
+                when (result) {
+                    is SearchViewModel.SearchUiState.ShowLoading -> showLoading(true)
+                    is SearchViewModel.SearchUiState.SearchResult -> {
+                        result.model.let {
+                            showLoading(false)
                             if (it.isNotEmpty()) {
                                 searchController.setUsers(it.toMutableList())
                             } else {
@@ -121,9 +120,9 @@ class SearchFragment : BaseFragment<FragmentSearchBinding>() {
                             }
                         }
                     }
-                    Resource.Status.ERROR -> {
+                    is SearchViewModel.SearchUiState.ShowError -> {
                         showLoading(false)
-                        result.throwable?.let { throwable ->
+                        result.error.let { throwable ->
                             showError(throwable)
                             binding.sbSearch.showErrorSnackbar(
                                 text = getString(R.string.txt_error, throwable.getThrowable()),
@@ -135,34 +134,12 @@ class SearchFragment : BaseFragment<FragmentSearchBinding>() {
                     }
                 }
             }
-
-            searchNext.observe(viewLifecycleOwner) { result ->
-                when (result.status) {
-                    Resource.Status.SUCCESS -> {
-                        _isScrolled = false
-                        result.body?.let {
-                            if (it.isEmpty()) loadMoreState(false)
-                            searchController.addUsers(it.toMutableList())
-                        }
-                    }
-                    Resource.Status.ERROR -> {
-                        loadMoreState(false)
-                        result.throwable?.let { throwable ->
-                            binding.sbSearch.showErrorSnackbar(
-                                text = getString(R.string.txt_error, throwable.getThrowable()),
-                                onRetry = {
-                                    _searchViewModel.searchNext(_username, _currentPage)
-                                }
-                            )
-                        }
-                    }
-                }
-            }
         }
     }
 
     override fun inject() {
-        (requireActivity().application as GitHubApplication).appComponent.searchComponent().create().inject(this)
+        (requireActivity().application as GitHubApplication).appComponent.searchComponent().create()
+            .inject(this)
     }
 
     private fun showLoading(isLoading: Boolean) {
@@ -182,7 +159,7 @@ class SearchFragment : BaseFragment<FragmentSearchBinding>() {
         }
     }
 
-    private fun loadMoreState(isLoadMore: Boolean) {
-        searchController.setIsLoadMore(isLoadMore)
-    }
+//    private fun loadMoreState(isLoadMore: Boolean) {
+//        searchController.setIsLoadMore(isLoadMore)
+//    }
 }

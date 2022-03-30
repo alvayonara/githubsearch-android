@@ -2,7 +2,7 @@ package com.alvayonara.githubsearch.di.detail
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
-import com.alvayonara.githubsearch.ui.detail.ProfileViewModel
+import com.alvayonara.githubsearch.ui.detail.DetailViewModel
 import dagger.Binds
 import dagger.Module
 import dagger.multibindings.IntoMap
@@ -19,6 +19,6 @@ abstract class DetailViewModelModule {
     @DetailScope
     @Binds
     @IntoMap
-    @DetailViewModelKey(ProfileViewModel::class)
-    abstract fun bindDetailViewModel(detailViewModel: ProfileViewModel): ViewModel
+    @DetailViewModelKey(DetailViewModel::class)
+    abstract fun bindDetailViewModel(detailViewModel: DetailViewModel): ViewModel
 }

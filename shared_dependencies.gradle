@@ -32,4 +32,9 @@ dependencies {
 
     // Circle Image
     implementation "de.hdodenhof:circleimageview:$circleImageVersion"
+
+    // RxJava
+    implementation "io.reactivex.rxjava3:rxjava:$rxJava"
+    implementation "androidx.room:room-rxjava3:$roomVersion"
+    implementation "com.squareup.retrofit2:adapter-rxjava3:$retrofitVersion"
 }

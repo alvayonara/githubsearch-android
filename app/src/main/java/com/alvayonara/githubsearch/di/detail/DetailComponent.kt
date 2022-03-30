@@ -1,6 +1,6 @@
 package com.alvayonara.githubsearch.di.detail
 
-import com.alvayonara.githubsearch.ui.detail.ProfileFragment
+import com.alvayonara.githubsearch.ui.detail.DetailFragment
 import dagger.Subcomponent
 
 @DetailScope
@@ -12,5 +12,5 @@ interface DetailComponent {
         fun create(): DetailComponent
     }
 
-    fun inject(profileFragment: ProfileFragment)
+    fun inject(detailFragment: DetailFragment)
 }

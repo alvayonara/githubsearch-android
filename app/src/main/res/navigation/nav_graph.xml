@@ -21,9 +21,9 @@
 
     <fragment
         android:id="@+id/profileFragment"
-        android:name="com.alvayonara.githubsearch.ui.detail.ProfileFragment"
+        android:name="com.alvayonara.githubsearch.ui.detail.DetailFragment"
         android:label="fragment_profile"
-        tools:layout="@layout/fragment_profile">
+        tools:layout="@layout/fragment_detail">
         <argument
             android:name="username"
             app:argType="string" />

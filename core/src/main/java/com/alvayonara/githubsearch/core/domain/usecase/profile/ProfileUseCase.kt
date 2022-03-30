@@ -2,9 +2,10 @@ package com.alvayonara.githubsearch.core.domain.usecase.profile
 
 import com.alvayonara.githubsearch.core.domain.model.profile.Profile
 import com.alvayonara.githubsearch.core.domain.model.profile.Repository
+import io.reactivex.rxjava3.core.Flowable
 import kotlinx.coroutines.flow.Flow
 
 interface ProfileUseCase {
-    suspend fun getProfile(username: String): Flow<Profile>
-    suspend fun getRepository(username: String, page: Int): Flow<List<Repository>>
+    fun getProfile(username: String): Flowable<Profile>
+    fun getRepository(username: String, page: Int): Flowable<List<Repository>>
 }

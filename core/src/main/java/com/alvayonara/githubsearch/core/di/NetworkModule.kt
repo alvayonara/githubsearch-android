@@ -10,6 +10,7 @@ import dagger.Provides
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
 import retrofit2.Retrofit
+import retrofit2.adapter.rxjava3.RxJava3CallAdapterFactory
 import retrofit2.converter.moshi.MoshiConverterFactory
 import java.util.concurrent.TimeUnit
 import javax.inject.Singleton
@@ -55,6 +56,7 @@ class NetworkModule {
     ): Retrofit =
         Retrofit.Builder()
             .addConverterFactory(moshiConverterFactory)
+            .addCallAdapterFactory(RxJava3CallAdapterFactory.create())
             .client(okHttpClient)
             .baseUrl(BuildConfig.BASE_URL)
             .build()

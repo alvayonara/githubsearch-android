@@ -6,7 +6,7 @@ import com.alvayonara.githubsearch.core.domain.model.profile.Repository
 import com.alvayonara.githubsearch.core.domain.usecase.profile.ProfileUseCase
 import com.alvayonara.githubsearch.core.utils.Constant
 import com.alvayonara.githubsearch.core.utils.DataDummy
-import com.alvayonara.githubsearch.ui.detail.ProfileViewModel
+import com.alvayonara.githubsearch.ui.detail.DetailViewModel
 import com.alvayonara.githubsearch.utils.BaseUnitTest
 import com.alvayonara.githubsearch.utils.getOrAwaitValue
 import io.mockk.coEvery
@@ -21,26 +21,26 @@ import org.junit.Test
 import java.io.IOException
 
 @ExperimentalCoroutinesApi
-class ProfileViewModelTest: BaseUnitTest() {
+class DetailViewModelTest: BaseUnitTest() {
 
     private val profileUseCase: ProfileUseCase = mockk()
 
-    private lateinit var profileViewModel: ProfileViewModel
+    private lateinit var detailViewModel: DetailViewModel
 
     private val observerProfile: Observer<Resource<List<Pair<Constant.DetailProfile, Any>>>> = mockk(relaxUnitFun = true)
     private val observerRepository: Observer<Resource<List<Repository>>> = mockk(relaxUnitFun = true)
 
     @Before
     fun setUp() {
-        profileViewModel = ProfileViewModel(profileUseCase)
-        profileViewModel.profile.observeForever(observerProfile)
-        profileViewModel.repository.observeForever(observerRepository)
+        detailViewModel = DetailViewModel(profileUseCase)
+        detailViewModel.profile.observeForever(observerProfile)
+        detailViewModel.repository.observeForever(observerRepository)
     }
 
     @After
     fun finish() {
-        profileViewModel.profile.removeObserver(observerProfile)
-        profileViewModel.repository.removeObserver(observerRepository)
+        detailViewModel.profile.removeObserver(observerProfile)
+        detailViewModel.repository.removeObserver(observerRepository)
     }
 
     /**
@@ -55,13 +55,13 @@ class ProfileViewModelTest: BaseUnitTest() {
         coEvery { profileUseCase.getRepository(any(), Constant.Services.FIRST_PAGE) } returns flowOf(repositoryResult)
 
         // when
-        profileViewModel.getProfile(profileResult.login)
+        detailViewModel.getProfile(profileResult.login)
 
         // then
-        assertNotNull(profileViewModel.profile.getOrAwaitValue())
+        assertNotNull(detailViewModel.profile.getOrAwaitValue())
         assertEquals(
             Resource.success(DataDummy.getDetailProfile()),
-            profileViewModel.profile.getOrAwaitValue()
+            detailViewModel.profile.getOrAwaitValue()
         )
     }
 
@@ -73,7 +73,7 @@ class ProfileViewModelTest: BaseUnitTest() {
         coEvery { profileUseCase.getRepository(any(), Constant.Services.FIRST_PAGE) } throws IOException()
 
         // when
-        profileViewModel.getProfile(profileResult.login)
+        detailViewModel.getProfile(profileResult.login)
     }
 
     /**
@@ -86,13 +86,13 @@ class ProfileViewModelTest: BaseUnitTest() {
         coEvery { profileUseCase.getRepository(any(), Constant.Services.FIRST_PAGE) } returns flowOf(repositoryResult)
 
         // when
-        profileViewModel.getNextRepository(DataDummy.getProfile().login, Constant.Services.FIRST_PAGE)
+        detailViewModel.getNextRepository(DataDummy.getProfile().login, Constant.Services.FIRST_PAGE)
 
         // then
-        assertNotNull(profileViewModel.repository.getOrAwaitValue())
+        assertNotNull(detailViewModel.repository.getOrAwaitValue())
         assertEquals(
             Resource.success(DataDummy.getRepository()),
-            profileViewModel.repository.getOrAwaitValue()
+            detailViewModel.repository.getOrAwaitValue()
         )
     }
 
@@ -102,6 +102,6 @@ class ProfileViewModelTest: BaseUnitTest() {
         coEvery { profileUseCase.getRepository(any(), Constant.Services.FIRST_PAGE) } throws IOException()
 
         // when
-        profileViewModel.getNextRepository(DataDummy.getProfile().login, Constant.Services.FIRST_PAGE)
+        detailViewModel.getNextRepository(DataDummy.getProfile().login, Constant.Services.FIRST_PAGE)
     }
 }
