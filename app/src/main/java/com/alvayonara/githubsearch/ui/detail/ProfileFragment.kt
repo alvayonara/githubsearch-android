@@ -14,7 +14,9 @@ import com.alvayonara.githubsearch.core.domain.model.profile.Repository
 import com.alvayonara.githubsearch.core.ui.profile.ProfileController
 import com.alvayonara.githubsearch.core.utils.*
 import com.alvayonara.githubsearch.databinding.FragmentProfileBinding
-import com.alvayonara.githubsearch.ui.ViewModelFactory
+import com.alvayonara.githubsearch.di.ViewModelFactory
+import com.alvayonara.githubsearch.di.detail.DetailViewModelFactory
+import com.alvayonara.githubsearch.di.search.SearchViewModelFactory
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.FlowPreview
 import kotlinx.coroutines.ObsoleteCoroutinesApi
@@ -26,7 +28,7 @@ import javax.inject.Inject
 class ProfileFragment : BaseFragment<FragmentProfileBinding>() {
 
     @Inject
-    lateinit var factory: ViewModelFactory
+    lateinit var factory: DetailViewModelFactory
     private val _profileViewModel: ProfileViewModel by viewModels { factory }
 
     @Inject
@@ -138,7 +140,7 @@ class ProfileFragment : BaseFragment<FragmentProfileBinding>() {
     }
 
     override fun inject() {
-        (requireActivity().application as GitHubApplication).appComponent.inject(this)
+        (requireActivity().application as GitHubApplication).appComponent.detailComponent().create().inject(this)
     }
 
     private fun showLoading(isLoading: Boolean) {

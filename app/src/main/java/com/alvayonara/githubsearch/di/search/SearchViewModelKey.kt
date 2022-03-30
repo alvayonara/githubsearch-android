@@ -1,4 +1,4 @@
-package com.alvayonara.githubsearch.di
+package com.alvayonara.githubsearch.di.search
 
 import androidx.lifecycle.ViewModel
 import dagger.MapKey
@@ -11,6 +11,5 @@ import kotlin.reflect.KClass
     AnnotationTarget.PROPERTY_SETTER
 )
 @Retention(AnnotationRetention.RUNTIME)
-
 @MapKey
-annotation class ViewModelKey(val value: KClass<out ViewModel>)
+annotation class SearchViewModelKey(val value: KClass<out ViewModel>)

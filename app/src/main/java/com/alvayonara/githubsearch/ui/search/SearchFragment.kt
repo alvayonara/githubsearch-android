@@ -15,7 +15,8 @@ import com.alvayonara.githubsearch.core.data.source.remote.Resource
 import com.alvayonara.githubsearch.core.ui.search.SearchController
 import com.alvayonara.githubsearch.core.utils.*
 import com.alvayonara.githubsearch.databinding.FragmentSearchBinding
-import com.alvayonara.githubsearch.ui.ViewModelFactory
+import com.alvayonara.githubsearch.di.ViewModelFactory
+import com.alvayonara.githubsearch.di.search.SearchViewModelFactory
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.FlowPreview
 import kotlinx.coroutines.ObsoleteCoroutinesApi
@@ -28,7 +29,7 @@ import javax.inject.Inject
 class SearchFragment : BaseFragment<FragmentSearchBinding>() {
 
     @Inject
-    lateinit var factory: ViewModelFactory
+    lateinit var factory: SearchViewModelFactory
     private val _searchViewModel: SearchViewModel by viewModels { factory }
 
     @Inject
@@ -161,14 +162,16 @@ class SearchFragment : BaseFragment<FragmentSearchBinding>() {
     }
 
     override fun inject() {
-        (requireActivity().application as GitHubApplication).appComponent.inject(this)
+        (requireActivity().application as GitHubApplication).appComponent.searchComponent().create().inject(this)
     }
 
     private fun showLoading(isLoading: Boolean) {
         if (isLoading) {
+            binding.rvSearch.gone()
             binding.pbSearch.visible()
         } else {
             binding.pbSearch.gone()
+            binding.rvSearch.visible()
         }
     }
 

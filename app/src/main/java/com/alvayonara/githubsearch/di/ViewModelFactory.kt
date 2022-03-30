@@ -1,13 +1,11 @@
-package com.alvayonara.githubsearch.ui
+package com.alvayonara.githubsearch.di
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
-import com.alvayonara.githubsearch.di.AppScope
 import javax.inject.Inject
 import javax.inject.Provider
 
-@AppScope
-class ViewModelFactory @Inject constructor(
+abstract class ViewModelFactory constructor(
     private val creators: Map<Class<out ViewModel>, @JvmSuppressWildcards Provider<ViewModel>>
 ) : ViewModelProvider.Factory {
 

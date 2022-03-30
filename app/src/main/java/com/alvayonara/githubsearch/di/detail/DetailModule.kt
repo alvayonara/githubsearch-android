@@ -1,17 +1,14 @@
-package com.alvayonara.githubsearch.di
+package com.alvayonara.githubsearch.di.detail
 
 import android.content.Context
 import com.alvayonara.githubsearch.core.ui.profile.ProfileController
-import com.alvayonara.githubsearch.core.ui.search.SearchController
 import dagger.Module
 import dagger.Provides
 
 @Module
-class EpoxyModule {
+class DetailModule {
 
     @Provides
-    fun provideSearchController(context: Context) = SearchController(context)
-
-    @Provides
+    @DetailScope
     fun provideProfileController(context: Context) = ProfileController(context)
 }
