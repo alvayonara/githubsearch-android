@@ -29,155 +29,155 @@ class ProfileRepositoryTest {
         profileRepository = ProfileRepository(profileRemoteSource)
     }
 
-    /**
-     * Get Profile
-     */
-    @Test
-    fun `given success response then return profile`() = runBlocking {
-        // given
-        val username = DataDummy.getProfile().login
-        val fakeResponse = DataDummy.getProfileResponses()
-        val expectedUser = DataDummy.getProfile()
-        coEvery {
-            profileRemoteSource.getProfile(
-                username
-            )
-        } returns fakeResponse
-
-        // when
-        val actual = profileRepository.getProfile(username)
-
-        // then
-        assertEquals(expectedUser, actual)
-    }
-
-    @Test(expected = IOException::class)
-    fun `given network is error when get profile then throw IOException`() = runTest {
-        // given
-        val username = DataDummy.getProfile().login
-        coEvery {
-            profileRemoteSource.getProfile(
-                username
-            )
-        } throws IOException()
-
-        // when
-        profileRepository.getProfile(username)
-    }
-
-    @Test(expected = HttpException::class)
-    fun `given unauthorized network when get profile then throw HttpException`() = runTest {
-            // given
-            val username = DataDummy.getProfile().login
-            val responseUnauthorized =
-                Response.error<List<SearchItem>>(
-                    HttpURLConnection.HTTP_UNAUTHORIZED,
-                    mockk(relaxed = true)
-                )
-            coEvery {
-                profileRemoteSource.getProfile(
-                    username
-                )
-            } throws HttpException(responseUnauthorized)
-
-            // when
-            profileRepository.getProfile(username)
-        }
-
-    @Test(expected = HttpException::class)
-    fun `given forbidden network when get profile then throw HttpException`() = runTest {
-        // given
-        val username = DataDummy.getProfile().login
-        val responseForbidden =
-            Response.error<List<SearchItem>>(
-                HttpURLConnection.HTTP_FORBIDDEN,
-                mockk(relaxed = true)
-            )
-        coEvery {
-            profileRemoteSource.getProfile(
-                username
-            )
-        } throws HttpException(responseForbidden)
-
-        // when
-        profileRepository.getProfile(username)
-    }
-
-    /**
-     * Get repository
-     */
-    @Test
-    fun `given success response then return repos`() = runBlocking {
-        // given
-        val username = DataDummy.getProfile().login
-        val fakeResponse = DataDummy.getRepositoryResponses()
-        val expectedUser = DataDummy.getRepository()
-        coEvery {
-            profileRemoteSource.getRepository(
-                username,
-                Constant.Services.FIRST_PAGE
-            )
-        } returns fakeResponse
-
-        // when
-        val actual = profileRepository.getRepository(username, Constant.Services.FIRST_PAGE)
-
-        // then
-        assertEquals(expectedUser, actual)
-    }
-
-    @Test(expected = IOException::class)
-    fun `given network is error when get repos then throw IOException`() = runTest {
-        // given
-        val username = DataDummy.getProfile().login
-        coEvery {
-            profileRemoteSource.getRepository(
-                username,
-                Constant.Services.FIRST_PAGE
-            )
-        } throws IOException()
-
-        // when
-        profileRepository.getRepository(username, Constant.Services.FIRST_PAGE)
-    }
-
-    @Test(expected = HttpException::class)
-    fun `given unauthorized network when get repos then throw HttpException`() = runTest {
-        // given
-        val username = DataDummy.getProfile().login
-        val responseUnauthorized =
-            Response.error<List<SearchItem>>(
-                HttpURLConnection.HTTP_UNAUTHORIZED,
-                mockk(relaxed = true)
-            )
-        coEvery {
-            profileRemoteSource.getRepository(
-                username,
-                Constant.Services.FIRST_PAGE
-            )
-        } throws HttpException(responseUnauthorized)
-
-        // when
-        profileRepository.getRepository(username, Constant.Services.FIRST_PAGE)
-    }
-
-    @Test(expected = HttpException::class)
-    fun `given forbidden network when get repos then throw HttpException`() = runTest {
-        // given
-        val username = DataDummy.getProfile().login
-        val responseForbidden =
-            Response.error<List<SearchItem>>(
-                HttpURLConnection.HTTP_FORBIDDEN,
-                mockk(relaxed = true)
-            )
-        coEvery {
-            profileRemoteSource.getRepository(
-                username,
-                Constant.Services.FIRST_PAGE
-            )
-        } throws HttpException(responseForbidden)
-
-        // when
-        profileRepository.getRepository(username, Constant.Services.FIRST_PAGE)
-    }
+//    /**
+//     * Get Profile
+//     */
+//    @Test
+//    fun `given success response then return profile`() = runBlocking {
+//        // given
+//        val username = DataDummy.getProfile().login
+//        val fakeResponse = DataDummy.getProfileResponses()
+//        val expectedUser = DataDummy.getProfile()
+//        coEvery {
+//            profileRemoteSource.getProfile(
+//                username
+//            )
+//        } returns fakeResponse
+//
+//        // when
+//        val actual = profileRepository.getProfile(username)
+//
+//        // then
+//        assertEquals(expectedUser, actual)
+//    }
+//
+//    @Test(expected = IOException::class)
+//    fun `given network is error when get profile then throw IOException`() = runTest {
+//        // given
+//        val username = DataDummy.getProfile().login
+//        coEvery {
+//            profileRemoteSource.getProfile(
+//                username
+//            )
+//        } throws IOException()
+//
+//        // when
+//        profileRepository.getProfile(username)
+//    }
+//
+//    @Test(expected = HttpException::class)
+//    fun `given unauthorized network when get profile then throw HttpException`() = runTest {
+//            // given
+//            val username = DataDummy.getProfile().login
+//            val responseUnauthorized =
+//                Response.error<List<SearchItem>>(
+//                    HttpURLConnection.HTTP_UNAUTHORIZED,
+//                    mockk(relaxed = true)
+//                )
+//            coEvery {
+//                profileRemoteSource.getProfile(
+//                    username
+//                )
+//            } throws HttpException(responseUnauthorized)
+//
+//            // when
+//            profileRepository.getProfile(username)
+//        }
+//
+//    @Test(expected = HttpException::class)
+//    fun `given forbidden network when get profile then throw HttpException`() = runTest {
+//        // given
+//        val username = DataDummy.getProfile().login
+//        val responseForbidden =
+//            Response.error<List<SearchItem>>(
+//                HttpURLConnection.HTTP_FORBIDDEN,
+//                mockk(relaxed = true)
+//            )
+//        coEvery {
+//            profileRemoteSource.getProfile(
+//                username
+//            )
+//        } throws HttpException(responseForbidden)
+//
+//        // when
+//        profileRepository.getProfile(username)
+//    }
+//
+//    /**
+//     * Get repository
+//     */
+//    @Test
+//    fun `given success response then return repos`() = runBlocking {
+//        // given
+//        val username = DataDummy.getProfile().login
+//        val fakeResponse = DataDummy.getRepositoryResponses()
+//        val expectedUser = DataDummy.getRepository()
+//        coEvery {
+//            profileRemoteSource.getRepository(
+//                username,
+//                Constant.Services.FIRST_PAGE
+//            )
+//        } returns fakeResponse
+//
+//        // when
+//        val actual = profileRepository.getRepository(username, Constant.Services.FIRST_PAGE)
+//
+//        // then
+//        assertEquals(expectedUser, actual)
+//    }
+//
+//    @Test(expected = IOException::class)
+//    fun `given network is error when get repos then throw IOException`() = runTest {
+//        // given
+//        val username = DataDummy.getProfile().login
+//        coEvery {
+//            profileRemoteSource.getRepository(
+//                username,
+//                Constant.Services.FIRST_PAGE
+//            )
+//        } throws IOException()
+//
+//        // when
+//        profileRepository.getRepository(username, Constant.Services.FIRST_PAGE)
+//    }
+//
+//    @Test(expected = HttpException::class)
+//    fun `given unauthorized network when get repos then throw HttpException`() = runTest {
+//        // given
+//        val username = DataDummy.getProfile().login
+//        val responseUnauthorized =
+//            Response.error<List<SearchItem>>(
+//                HttpURLConnection.HTTP_UNAUTHORIZED,
+//                mockk(relaxed = true)
+//            )
+//        coEvery {
+//            profileRemoteSource.getRepository(
+//                username,
+//                Constant.Services.FIRST_PAGE
+//            )
+//        } throws HttpException(responseUnauthorized)
+//
+//        // when
+//        profileRepository.getRepository(username, Constant.Services.FIRST_PAGE)
+//    }
+//
+//    @Test(expected = HttpException::class)
+//    fun `given forbidden network when get repos then throw HttpException`() = runTest {
+//        // given
+//        val username = DataDummy.getProfile().login
+//        val responseForbidden =
+//            Response.error<List<SearchItem>>(
+//                HttpURLConnection.HTTP_FORBIDDEN,
+//                mockk(relaxed = true)
+//            )
+//        coEvery {
+//            profileRemoteSource.getRepository(
+//                username,
+//                Constant.Services.FIRST_PAGE
+//            )
+//        } throws HttpException(responseForbidden)
+//
+//        // when
+//        profileRepository.getRepository(username, Constant.Services.FIRST_PAGE)
+//    }
 }
