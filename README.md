@@ -4,6 +4,8 @@ There are 2 features on this apps:
 1. Search GitHub users by name.
 2. Get detail information of the user including Profile and Repository with load more features.
 
+Note: You can also check the implementation Dagger 2 and RxJava in **dagger2-rxjava** branch (on going).
+
 ## 💡 Stack and Libraries
 * [Kotlin](https://https://kotlinlang.org/) - built with 100% Kotlin.
 * [Coroutines Flow](https://github.com/alvayonara/OpenWeatherApps#:~:text=with%20100%25%20Kotlin.-,Coroutines%20Flow,-%2D%20emit%20multiple%20values) - emit multiple values sequentially (flatMap, zip, etc.)
